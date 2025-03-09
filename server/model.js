@@ -1,0 +1,11 @@
+const mongoose = require("mongoose");
+
+// Define Schema for User Registration
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+}, { timestamps: true });  // Automatically add createdAt and updatedAt fields
+
+const User = mongoose.model("User", userSchema);
+module.exports = User;
