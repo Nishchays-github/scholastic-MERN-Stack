@@ -6,6 +6,7 @@ import SchoolCard from "../components/SchoolCard.jsx";
 import SchoolDetailPage from '../components/SchoolDetailPage.jsx'
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
+import axios from "axios";
 
 const Schools = () => {
   const IPSTACK_ACCESS_KEY = "6f61cc230baef3ff75bb1be0871bba1e";
@@ -22,69 +23,78 @@ const Schools = () => {
   const [bookmarked, setBookmarked] = useState({});
   const [showRegisterPopup, setShowRegisterPopup] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
-const fetchCurrentLocation = async () => {
-  try {
-    // First try HTML5 geolocation (most accurate)
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          const locationString = `Lat: ${latitude}, Lng: ${longitude}`;
-          setCurrentLocation(locationString);
-          fetchSchools(latitude, longitude);
-        },
-        async (error) => {
-          // If user denies geolocation, fall back to IP-based
-          console.log("Geolocation denied, falling back to IP");
-          try {
-            // Get user's public IP
-            const ipResponse = await axios.get('https://api.ipify.org?format=json');
-            const userIP = ipResponse.data.ip;
-            
-            // Get location from IP
-            const locationResponse = await axios.get(
-              `http://api.ipstack.com/${userIP}?access_key=${IPSTACK_ACCESS_KEY}`
-            );
-            
-            const locationData = locationResponse.data;
-            const locationString = `Lat: ${locationData.latitude}, Lng: ${locationData.longitude}`;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchCurrentLocation = async () => {
+    setIsLoading(true);
+    try {
+      // First try HTML5 geolocation (most accurate)
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            const locationString = `Lat: ${latitude}, Lng: ${longitude}`;
             setCurrentLocation(locationString);
-            fetchSchools(locationData.latitude, locationData.longitude);
-          } catch (ipError) {
-            console.error("Error fetching location from IP:", ipError);
-            alert("Could not determine your location. Please try again or enter a location manually.");
+            await fetchSchools(latitude, longitude);
+            setIsLoading(false);
+          },
+          async (error) => {
+            // If user denies geolocation, fall back to IP-based
+            console.log("Geolocation denied, falling back to IP");
+            try {
+              // Get user's public IP
+              const ipResponse = await axios.get('https://api.ipify.org?format=json');
+              const userIP = ipResponse.data.ip;
+              
+              // Get location from IP
+              const locationResponse = await axios.get(
+                `http://api.ipstack.com/${userIP}?access_key=${IPSTACK_ACCESS_KEY}`
+              );
+              
+              const locationData = locationResponse.data;
+              const locationString = `Lat: ${locationData.latitude}, Lng: ${locationData.longitude}`;
+              setCurrentLocation(locationString);
+              await fetchSchools(locationData.latitude, locationData.longitude);
+              setIsLoading(false);
+            } catch (ipError) {
+              console.error("Error fetching location from IP:", ipError);
+              setIsLoading(false);
+              alert("Could not determine your location. Please try again or enter a location manually.");
+            }
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,  // 10 seconds
+            maximumAge: 0    // Don't use cached position
           }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,  // 10 seconds
-          maximumAge: 0    // Don't use cached position
-        }
-      );
-    } else {
-      // Browser doesn't support geolocation, use IP-based directly
-      try {
-        const ipResponse = await axios.get('https://api.ipify.org?format=json');
-        const userIP = ipResponse.data.ip;
-        
-        const locationResponse = await axios.get(
-          `http://api.ipstack.com/${userIP}?access_key=${IPSTACK_ACCESS_KEY}`
         );
-        
-        const locationData = locationResponse.data;
-        const locationString = `Lat: ${locationData.latitude}, Lng: ${locationData.longitude}`;
-        setCurrentLocation(locationString);
-        fetchSchools(locationData.latitude, locationData.longitude);
-      } catch (ipError) {
-        console.error("Error fetching location from IP:", ipError);
-        alert("Could not determine your location. Please enter a location manually.");
+      } else {
+        // Browser doesn't support geolocation, use IP-based directly
+        try {
+          const ipResponse = await axios.get('https://api.ipify.org?format=json');
+          const userIP = ipResponse.data.ip;
+          
+          const locationResponse = await axios.get(
+            `http://api.ipstack.com/${userIP}?access_key=${IPSTACK_ACCESS_KEY}`
+          );
+          
+          const locationData = locationResponse.data;
+          const locationString = `Lat: ${locationData.latitude}, Lng: ${locationData.longitude}`;
+          setCurrentLocation(locationString);
+          await fetchSchools(locationData.latitude, locationData.longitude);
+          setIsLoading(false);
+        } catch (ipError) {
+          console.error("Error fetching location from IP:", ipError);
+          setIsLoading(false);
+          alert("Could not determine your location. Please enter a location manually.");
+        }
       }
+    } catch (error) {
+      console.error("Error in fetchCurrentLocation:", error);
+      setIsLoading(false);
+      alert("Error fetching location. Please try again or enter a location manually.");
     }
-  } catch (error) {
-    console.error("Error in fetchCurrentLocation:", error);
-    alert("Error fetching location. Please try again or enter a location manually.");
-  }
-};
+  };
 
   // Helper functions
   const getRandomRating = () => (Math.random() * (5.0 - 3.0) + 3.0).toFixed(1);
@@ -94,48 +104,49 @@ const fetchCurrentLocation = async () => {
     "Cafeteria", "Auditorium", "Sports Facilities", "Smart Classes"
   ].sort(() => 0.5 - Math.random()).slice(0, 4);
 
-
   const searchLocation = async () => {
     const locationQuery = customLocation.trim();
     if (!locationQuery) return alert("Please enter a location to search.");
 
+    setIsLoading(true);
     try {
       const coordinates = await searchLocationCoordinates(locationQuery);
       if (!coordinates?.x || !coordinates?.y) {
+        setIsLoading(false);
         return alert("No valid coordinates found for this location.");
       }
       
       const locationString = `Lat: ${coordinates.x}, Lng: ${coordinates.y}`;
       setCurrentLocation(locationString);
-      fetchSchools(coordinates.x, coordinates.y);
+      await fetchSchools(coordinates.x, coordinates.y);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       alert(error.response?.data?.error || "Error searching location.");
     }
   };
 
- const fetchSchools = async (latitude, longitude) => {
-  try {
-    const schoolsData = await getNearbySchools({ latitude, longitude });
+  const fetchSchools = async (latitude, longitude) => {
+    try {
+      const schoolsData = await getNearbySchools({ latitude, longitude });
+      const predictions = schoolsData?.predictions ?? []; // Safe fallback if undefined
 
-    const predictions = schoolsData?.predictions ?? []; // Safe fallback if undefined
+      const schoolList = predictions.map((school, i) => ({
+        id: i,
+        name: school?.structured_formatting?.main_text || "Unnamed School",
+        address: school?.description || "No address available",
+        rating: getRandomRating(),
+        distance: school?.distance_meters || "N/A",
+        reviews: getRandomReviews(),
+        facilities: getRandomFacilities(),
+        description: "This school provides quality education with experienced faculty and good infrastructure."
+      }));
 
-    const schoolList = predictions.map((school, i) => ({
-      id: i,
-      name: school?.structured_formatting?.main_text || "Unnamed School",
-      address: school?.description || "No address available",
-      rating: getRandomRating(),
-      distance: school?.distance_meters || "N/A",
-      reviews: getRandomReviews(),
-      facilities: getRandomFacilities(),
-      description: "This school provides quality education with experienced faculty and good infrastructure."
-    }));
-
-    setSchools(schoolList);
-  } catch (error) {
-    alert("Error fetching schools: " + (error?.message || "Please try again"));
-  }
-};
-
+      setSchools(schoolList);
+    } catch (error) {
+      alert("Error fetching schools: " + (error?.message || "Please try again"));
+    }
+  };
 
   const toggleBookmark = (schoolId) => {
     if (!User) return setShowRegisterPopup(true);
@@ -171,17 +182,37 @@ const fetchCurrentLocation = async () => {
 
         <motion.div className="mt-6 flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-          <motion.button onClick={fetchCurrentLocation} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-auto bg-blue-600 text-white px-5 py-3 rounded-md hover:bg-blue-700 transition">
-            Use Current Location
+          <motion.button 
+            onClick={fetchCurrentLocation} 
+            whileHover={{ scale: 1.05 }} 
+            whileTap={{ scale: 0.95 }}
+            disabled={isLoading}
+            className={`w-full sm:w-auto px-5 py-3 rounded-md transition ${
+              isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
+          >
+            {isLoading ? 'Locating...' : 'Use Current Location'}
           </motion.button>
 
           <motion.div className="flex w-full bg-white shadow-md rounded-md overflow-hidden" whileHover={{ scale: 1.02 }}>
-            <input type="text" value={customLocation} onChange={(e) => setCustomLocation(e.target.value)}
-              placeholder="Enter a location / pincode" className="px-4 py-3 w-full outline-none border border-gray-300"/>
-            <motion.button onClick={searchLocation} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-              className="bg-purple-600 text-white px-6 py-3 hover:bg-purple-700">
-              Search
+            <input 
+              type="text" 
+              value={customLocation} 
+              onChange={(e) => setCustomLocation(e.target.value)}
+              placeholder="Enter a location / pincode" 
+              className="px-4 py-3 w-full outline-none border border-gray-300"
+              disabled={isLoading}
+            />
+            <motion.button 
+              onClick={searchLocation} 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              disabled={isLoading}
+              className={`px-6 py-3 ${
+                isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700 text-white'
+              }`}
+            >
+              {isLoading ? 'Searching...' : 'Search'}
             </motion.button>
           </motion.div>
         </motion.div>
@@ -194,7 +225,11 @@ const fetchCurrentLocation = async () => {
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-purple-700 text-center mb-8">Nearby Schools</h2>
 
-          {schools.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            </div>
+          ) : schools.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {schools.map((school) => (
                 <SchoolCard
