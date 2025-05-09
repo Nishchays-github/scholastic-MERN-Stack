@@ -4,16 +4,17 @@ import { motion } from "framer-motion";
 import Pic from "../assets/Logo.svg"; // Adjust the path based on your structure
 import useAuthStore from "../useAuthstore.js";
 
-const Header = ({User}) => {
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const {checkAuth} = useAuthStore();
+  const {checkAuth,User} = useAuthStore();
   const toggleMoreMenu = () => {
     setIsMoreOpen(!isMoreOpen);
   };
   useEffect(()=>{
     checkAuth();
   },[])
+  console.log('this is my user', User);
 
   return (
     <header className="bg-white shadow-md py-4 sticky top-0 z-50">

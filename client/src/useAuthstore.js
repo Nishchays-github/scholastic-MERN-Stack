@@ -5,9 +5,10 @@ const useAuthStore = create((set, get) => ({
     User: null,
     bookmarkedschool: [],
     discussions:[],
-    signup: async (data) => {
+    signup: async (data) => {   
         try {
             const res = await instance.post('/auth/signup', data);
+            console.log('hello',res.data);
             set({ User: res.data });
             return res.data;
         } catch (error) {
@@ -42,6 +43,7 @@ const useAuthStore = create((set, get) => ({
     checkAuth: async () => {
         try {
             const res = await instance.get("/auth/check-auth");
+           console.log('hello',res.data);
             set({ User: res.data });
         } catch (error) {
             set({ User: null });
@@ -119,7 +121,6 @@ const useAuthStore = create((set, get) => ({
       fetchDiscussion: async () => {
         try {
           const res = await instance.get('/auth/fetch-discussion'); // Keep this
-          console.log(res.data);
           return res.data;
         } catch (error) {
           console.error('Error fetching discussions:', error);
@@ -128,7 +129,6 @@ const useAuthStore = create((set, get) => ({
       },
       deleteDiscussion: async ({ userEmail, reviewId }) => {
         try {
-          console.log('Deleting review data:', { userEmail, reviewId });
           
           const response = await instance.delete('/auth/delete-discussion', {
             data: { userEmail, reviewId } // Send data in request body

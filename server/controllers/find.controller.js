@@ -23,7 +23,6 @@ export const getNearbySchools = async (req, res) => {
   try {
     const url = `https://api.olamaps.io/places/v1/nearbysearch?location=${latitude},${longitude}&types=school&radius=10000&withCentroid=false&rankBy=popular&limit=50&api_key=${OLAMAPS_API_KEY}`;
     const response = await axios.get(url);
-    console.log('clicked--->');
     res.json(response.data);
   } catch (error) {
     console.error(
@@ -41,7 +40,6 @@ export const getNearbySchools = async (req, res) => {
  */
 export const getCurrentLocation = async (req, res) => {
   try {
-    console.log('clicked--->');
     const response = await axios.get(
       `http://api.ipstack.com/check?access_key=${IPSTACK_ACCESS_KEY}`
     );
@@ -79,7 +77,6 @@ export const searchLocationCoordinates = async (req, res) => {
           return res.status(404).json({ error: "No location found for this pincode" });
         }
         
-        console.log('Pincode data:', response.data[0].lat,response.data[0].lon);
         let x = response.data[0].lat,y = response.data[0].lon;
         return res.json({x,y});
       } catch (error) {
@@ -101,7 +98,6 @@ export const searchLocationCoordinates = async (req, res) => {
       if (!response.data || response.data.length === 0) {
         return res.status(404).json({ error: "No location found" });
       }
-      console.log('response.data',  response.data);
       let x = response.data[0].latitude,y = response.data[0].longitude;
       return res.json({x,y});
     } catch (error) {

@@ -86,7 +86,6 @@
             const hashedPassword = await bcrypt.hash(password, salt);
 
             // Create new user
-            console.log('this ismy age',age);
             const newUser = await User.create({
                 name,
                 email,
@@ -257,7 +256,6 @@
             const { email, schoolName, schoolAddress } = req.body;
             
             if (!email || !schoolName || !schoolAddress) {
-                console.log('Missing fields:', { email, schoolName, schoolAddress });
                 return res.status(400).json({
                     success: false,
                     message: 'Email, school name, and school address are required'
@@ -306,7 +304,6 @@
     export const adddicussion = async (req, res) => {
         try {
         const { email, content } = req.body;
-        console.log(req.body, 'in backend');
     
         // Validate input
         if (!email || !content) {
@@ -353,8 +350,6 @@
     // Fetch Discussions
     export const fetchDiscussion = async (req, res) => {
         try {
-        // Get all discussions sorted by most recent reviews first
-        console.log('in my nackend  las file');
         const discussions = await Discussion.aggregate([
             {
             $unwind: "$reviews" // Break down each review into separate documents

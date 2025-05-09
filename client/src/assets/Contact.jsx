@@ -26,7 +26,6 @@ const Contact = () => {
       )
       .then(
         (result) => {
-          console.log(result.text);
           setSuccess(true);
           setLoading(false);
           formRef.current.reset();

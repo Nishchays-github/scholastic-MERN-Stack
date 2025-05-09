@@ -62,26 +62,29 @@ const Schools = () => {
     }
   };
 
-  const fetchSchools = async (latitude, longitude) => {
-    try {
-      const schoolsData = await getNearbySchools({ latitude, longitude });
-      
-      const schoolList = schoolsData.predictions.map((school, i) => ({
-        id: i,
-        name: school.structured_formatting.main_text,
-        address: school.description,
-        rating: getRandomRating(),
-        distance: school.distance_meters,
-        reviews: getRandomReviews(),
-        facilities: getRandomFacilities(),
-        description: "This school provides quality education with experienced faculty and good infrastructure."
-      }));
+ const fetchSchools = async (latitude, longitude) => {
+  try {
+    const schoolsData = await getNearbySchools({ latitude, longitude });
 
-      setSchools(schoolList);
-    } catch (error) {
-      alert("Error fetching schools: " + (error.message || "Please try again"));
-    }
-  };
+    const predictions = schoolsData?.predictions ?? []; // Safe fallback if undefined
+
+    const schoolList = predictions.map((school, i) => ({
+      id: i,
+      name: school?.structured_formatting?.main_text || "Unnamed School",
+      address: school?.description || "No address available",
+      rating: getRandomRating(),
+      distance: school?.distance_meters || "N/A",
+      reviews: getRandomReviews(),
+      facilities: getRandomFacilities(),
+      description: "This school provides quality education with experienced faculty and good infrastructure."
+    }));
+
+    setSchools(schoolList);
+  } catch (error) {
+    alert("Error fetching schools: " + (error?.message || "Please try again"));
+  }
+};
+
 
   const toggleBookmark = (schoolId) => {
     if (!User) return setShowRegisterPopup(true);

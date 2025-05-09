@@ -24,17 +24,15 @@ const ProfileDashboard = () => {
     fetchDiscussion,
     deleteDiscussion,
   } = useAuthStore();
-
+   useEffect(() => {
+    checkAuth();
+    fetchUserData();
+  }, []);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    checkAuth();
-    if (User?.email) {
-      fetchUserData();
-    }
-  }, [User?.email]);
+  console.log('this is my user',User);
 
   const fetchUserData = async () => {
     setLoading(true);
