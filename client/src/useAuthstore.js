@@ -8,7 +8,6 @@ const useAuthStore = create((set, get) => ({
     signup: async (data) => {   
         try {
             const res = await instance.post('/auth/signup', data);
-            console.log('hello',res.data);
             set({ User: res.data });
             return res.data;
         } catch (error) {
@@ -43,7 +42,6 @@ const useAuthStore = create((set, get) => ({
     checkAuth: async () => {
         try {
             const res = await instance.get("/auth/check-auth");
-           console.log('hello',res.data);
             set({ User: res.data });
         } catch (error) {
             set({ User: null });

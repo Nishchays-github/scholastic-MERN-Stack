@@ -4,7 +4,7 @@ import axios from "axios";
 const OLAMAPS_API_KEY = "1IyYo0305btp776JXy73Lydn3g4mKClKtn5sQa4S";
 const APININJAS_API_KEY = "/grzDUcTJIzNo+ICUV/jfA==hVV7sqYupbVGQ72P";
 const APININJAS_BASE_URL = "https://api.api-ninjas.com/v1/geocoding";
-const IPSTACK_ACCESS_KEY = "6f61cc230baef3ff75bb1be0871bba1e";
+
 
 /**
  * Get nearby schools based on latitude and longitude

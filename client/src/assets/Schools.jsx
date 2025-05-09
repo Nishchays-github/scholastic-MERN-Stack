@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Pic from "./Logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import useAuthStore from "../useAuthstore.js";
@@ -9,10 +8,10 @@ import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 
 const Schools = () => {
+  const IPSTACK_ACCESS_KEY = "6f61cc230baef3ff75bb1be0871bba1e";
   const { 
     User,
     getNearbySchools,
-    getCurrentLocation,
     searchLocationCoordinates
   } = useAuthStore();
   
@@ -23,7 +22,69 @@ const Schools = () => {
   const [bookmarked, setBookmarked] = useState({});
   const [showRegisterPopup, setShowRegisterPopup] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
-
+const fetchCurrentLocation = async () => {
+  try {
+    // First try HTML5 geolocation (most accurate)
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const locationString = `Lat: ${latitude}, Lng: ${longitude}`;
+          setCurrentLocation(locationString);
+          fetchSchools(latitude, longitude);
+        },
+        async (error) => {
+          // If user denies geolocation, fall back to IP-based
+          console.log("Geolocation denied, falling back to IP");
+          try {
+            // Get user's public IP
+            const ipResponse = await axios.get('https://api.ipify.org?format=json');
+            const userIP = ipResponse.data.ip;
+            
+            // Get location from IP
+            const locationResponse = await axios.get(
+              `http://api.ipstack.com/${userIP}?access_key=${IPSTACK_ACCESS_KEY}`
+            );
+            
+            const locationData = locationResponse.data;
+            const locationString = `Lat: ${locationData.latitude}, Lng: ${locationData.longitude}`;
+            setCurrentLocation(locationString);
+            fetchSchools(locationData.latitude, locationData.longitude);
+          } catch (ipError) {
+            console.error("Error fetching location from IP:", ipError);
+            alert("Could not determine your location. Please try again or enter a location manually.");
+          }
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,  // 10 seconds
+          maximumAge: 0    // Don't use cached position
+        }
+      );
+    } else {
+      // Browser doesn't support geolocation, use IP-based directly
+      try {
+        const ipResponse = await axios.get('https://api.ipify.org?format=json');
+        const userIP = ipResponse.data.ip;
+        
+        const locationResponse = await axios.get(
+          `http://api.ipstack.com/${userIP}?access_key=${IPSTACK_ACCESS_KEY}`
+        );
+        
+        const locationData = locationResponse.data;
+        const locationString = `Lat: ${locationData.latitude}, Lng: ${locationData.longitude}`;
+        setCurrentLocation(locationString);
+        fetchSchools(locationData.latitude, locationData.longitude);
+      } catch (ipError) {
+        console.error("Error fetching location from IP:", ipError);
+        alert("Could not determine your location. Please enter a location manually.");
+      }
+    }
+  } catch (error) {
+    console.error("Error in fetchCurrentLocation:", error);
+    alert("Error fetching location. Please try again or enter a location manually.");
+  }
+};
 
   // Helper functions
   const getRandomRating = () => (Math.random() * (5.0 - 3.0) + 3.0).toFixed(1);
@@ -33,16 +94,6 @@ const Schools = () => {
     "Cafeteria", "Auditorium", "Sports Facilities", "Smart Classes"
   ].sort(() => 0.5 - Math.random()).slice(0, 4);
 
-  const fetchCurrentLocation = async () => {
-    try {
-      const locationData = await getCurrentLocation();
-      const locationString = `Lat: ${locationData.latitude}, Lng: ${locationData.longitude}`;
-      setCurrentLocation(locationString);
-      fetchSchools(locationData.latitude, locationData.longitude);
-    } catch (error) {
-      alert("Error fetching location: " + (error.message || "Please try again"));
-    }
-  };
 
   const searchLocation = async () => {
     const locationQuery = customLocation.trim();

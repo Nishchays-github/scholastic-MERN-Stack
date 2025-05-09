@@ -32,8 +32,6 @@ const ProfileDashboard = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  console.log('this is my user',User);
-
   const fetchUserData = async () => {
     setLoading(true);
     try {

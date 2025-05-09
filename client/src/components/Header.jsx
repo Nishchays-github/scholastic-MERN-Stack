@@ -14,7 +14,6 @@ const Header = () => {
   useEffect(()=>{
     checkAuth();
   },[])
-  console.log('this is my user', User);
 
   return (
     <header className="bg-white shadow-md py-4 sticky top-0 z-50">
