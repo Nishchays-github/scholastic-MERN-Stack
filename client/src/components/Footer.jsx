@@ -26,14 +26,8 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-medium mb-3">Contact Us</h4>
             <ul className="text-gray-800 space-y-2">
-              <li>Email: <a href="mailto:brijeshpalsingh2002@gmail.com" className="hover:text-white">brijeshpalsingh2002@gmail.com</a></li>
-              <li>Phone: <a href="tel:+919057887244" className="hover:text-white">+91 9057887244</a></li>
-              <li className="flex items-center space-x-4 mt-2">
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" aria-label="Facebook" className="hover:text-white"><FaFacebook /></a>
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" aria-label="Instagram" className="hover:text-white"><FaInstagram /></a>
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" aria-label="LinkedIn" className="hover:text-white"><FaLinkedin /></a>
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" aria-label="Twitter" className="hover:text-white"><FaTwitter /></a>
-              </li>
+              <li>Email: <a href="mailto:nishchayparashar2004@gmail.com" className="hover:text-white">nishchayparashar2004@gmail.com</a></li>
+              <li>Phone: <a href="tel:+918439132067" className="hover:text-white">+91 8439132067</a></li>
             </ul>
           </div>
         </div>

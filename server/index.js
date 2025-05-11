@@ -8,7 +8,7 @@ import {connectDB} from "./lib/db.js"
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 // const radius = 10000;
 // Middleware
 const allowedOrigin = "http://localhost:5173";

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import Pic from "./Logo.svg";
 import useAuthStore from "../useAuthstore.js";
 import emailjs from "@emailjs/browser";
 import {
@@ -128,24 +127,6 @@ const Home = () => {
       .finally(() => setLoading(false));
   };
 
-  const navLinks = [
-    { to: "/", text: "" },
-    { to: "/schools", text: "Schools" },
-    { to: "/about", text: "About Us" },
-    { to: "/contact", text: "Contact" },
-    { to: "/faqs", text: "FAQ" },
-  ];
-
-  const moreLinks = [
-    { to: "/article", text: "Articles" },
-    { to: "/scholarship", text: "Scholarships" },
-    { to: "/result", text: "Results" },
-    {
-      to: "https://brijesh-pal-singh.github.io/notes-app_/",
-      text: "Tools/Widgets",
-      external: true,
-    },
-  ];
 
   return (
     <div className="w-full scroll-smooth font-sans">
@@ -210,7 +191,9 @@ const Home = () => {
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
     </div>
   ) : (
-    <div className="relative w-full max-w-6xl mx-auto overflow-x-hidden px-4">
+   <div className="relative w-full max-w-6xl mx-auto overflow-x-auto px-4">
+
+
       <motion.div 
         className="flex space-x-6"
         animate={{ x: isHovered ? 0 : ["-100%", "0%"] }}
@@ -280,14 +263,14 @@ const Home = () => {
               {
                 icon: "fas fa-envelope",
                 title: "Email Us",
-                content: "brijeshpalsingh2002@gmail.com",
-                href: "mailto:brijeshpalsingh2002@gmail.com",
+                content: "nishchayparashar2004@gmail.com",
+                href: "mailto:nishchayparashar2004@gmail.com",
               },
               {
                 icon: "fas fa-phone",
                 title: "Call Us",
-                content: "+91 9057887244",
-                href: "tel:+919057887244",
+                content: "+91 8439132067",
+                href: "tel:+918439132067",
               },
             ].map((item, i) => (
               <motion.div
@@ -313,34 +296,6 @@ const Home = () => {
             ))}
           </div>
 
-          <form
-            ref={form}
-            onSubmit={sendEmail}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
-          >
-            <input
-              required
-              name="user_name"
-              type="text"
-              placeholder="Your Name"
-              className="p-3 rounded-lg border border-purple-300"
-            />
-            <input
-              required
-              name="user_email"
-              type="email"
-              placeholder="Your Email"
-              className="p-3 rounded-lg border border-purple-300"
-            />
-            {/* <textarea name="message" rows="4" placeholder="Your Message" className="md:col-span-2 p-3 rounded-lg border border-purple-300"></textarea> */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="md:col-span-2 bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition"
-            >
-              {loading ? "Sending..." : "Send Message"}
-            </button>
-          </form>
 
           {result && (
             <p className="mt-4 text-purple-700 font-medium">{result}</p>
@@ -402,7 +357,7 @@ const Home = () => {
               rel="noopener noreferrer"
               className="px-6 md:px-8 py-2 md:py-3 bg-purple-600 text-black text-base md:text-lg rounded-lg shadow-lg hover:bg-purple-700 transition"
             >
-              Join Now
+              Join Our Whatsapp Community Now
             </a>
           </motion.div>
         </div>
