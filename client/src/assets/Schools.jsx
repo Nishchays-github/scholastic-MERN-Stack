@@ -9,7 +9,7 @@ import Footer from "../components/Footer.jsx";
 import axios from "axios";
 
 const Schools = () => {
-  const IPSTACK_ACCESS_KEY = "6f61cc230baef3ff75bb1be0871bba1e";
+  const IPSTACK_ACCESS_KEY = "ff8473e7bc1f9b3c49f2d3ad486256c0";
   const { 
     User,
     getNearbySchools,
