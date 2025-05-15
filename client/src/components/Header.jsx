@@ -86,21 +86,30 @@ const Header = () => {
         >
           {/* Mobile view shows all items together */}
           {isMenuOpen && leftNavItems.map((item, index) => {
-            const path = item === "My Portfolio" ? "/portfolio" : `/${item.toLowerCase().replace(/\s/g, "")}`;
-            
-            return (
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                {item}
-                <span
-                  className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
-                    location.pathname === path
-                      ? "w-full bg-blue-300"
-                      : "w-0 group-hover:w-full bg-purple-600"
-                  }`}
-                ></span>
-              </motion.div>
-            );
-          })}
+  const path = item === "My Portfolio" ? "/portfolio" : `/${item.toLowerCase().replace(/\s/g, "")}`;
+  
+  return (
+    <Link
+      key={`mobile-left-${index}`}
+      to={path}
+      className={`block relative group py-2 ${
+        location.pathname === path
+          ? "text-blue-500 font-semibold"
+          : "text-gray-700 hover:text-purple-600"
+      }`}
+      onClick={() => setIsMenuOpen(false)}
+    >
+      {item}
+      <span
+        className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+          location.pathname === path
+            ? "w-full bg-blue-300"
+            : "w-0 group-hover:w-full bg-purple-600"
+        }`}
+      ></span>
+    </Link>
+  );
+})}
 
           {/* Right navigation items */}
           {rightNavItems.map((item, index) => {
