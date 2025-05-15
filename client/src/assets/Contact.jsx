@@ -155,14 +155,14 @@ const Contact = () => {
               <ul className="space-y-4 text-gray-800">
                 <li className="flex items-center gap-3">
                   <FaEnvelope className="text-purple-600" />
-                  <a href="mailto:brijeshpalsingh2002@gmail.com" className="hover:underline">
-                    brijeshpalsingh2002@gmail.com
+                  <a href="mailto:nishchayparashar2004@gmail.com" className="hover:underline">
+                    nishchayparashar2004@gmail.com
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <FaPhone className="text-purple-600" />
-                  <a href="tel:+919057887244" className="hover:underline">
-                    +91 9057887244
+                  <a href="tel:+918439132067" className="hover:underline">
+                    +91 8439132067
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
@@ -204,30 +204,6 @@ const Contact = () => {
                 <li>Saturday: 10:00 AM - 4:00 PM</li>
                 <li>Sunday: Closed</li>
               </ul>
-
-              {/* Social Media */}
-              <h3 className="mt-6 md:mt-8 text-lg font-semibold text-purple-700">
-                Follow Us
-              </h3>
-              <div className="flex items-center gap-4 mt-3 text-purple-600 text-xl">
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" className="hover:text-purple-700"><FaFacebook /></a>
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" className="hover:text-purple-700"><FaInstagram /></a>
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" className="hover:text-purple-700"><FaLinkedin /></a>
-                <a href="https://www.linkedin.com/in/brijesh-pal-singh-152b88269/" className="hover:text-purple-700"><FaTwitter /></a>
-              </div>
-
-              {/* Live Chat Button */}
-              {/* <div className="mt-8 text-center">
-                <a 
-                  href="https://app.chitchat.gg/chat/new/681646b7c7f00720794fc4ee" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <button className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition">
-                    Chat with Us
-                  </button>
-                </a>
-              </div> */}
             </motion.div>
           </div>
         </div>

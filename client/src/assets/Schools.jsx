@@ -153,21 +153,6 @@ const Schools = () => {
     setBookmarked(prev => ({ ...prev, [schoolId]: !prev[schoolId] }));
   };
 
-  // Navigation items
-  const navLinks = [
-    { path: "/", label: "Home" },
-    { path: "/schools", label: "Schools" },
-    { path: "/about", label: "About Us" },
-    { path: "/contact", label: "Contact" },
-    { path: "/faqs", label: "FAQ" },
-  ];
-
-  const moreLinks = [
-    { path: "/article", label: "Articles" },
-    { path: "/scholarship", label: "Scholarships" },
-    { path: "/result", label: "Results" },
-    { path: "https://brijesh-pal-singh.github.io/notes-app_/", label: "Tools/Widgets", external: true }
-  ];
 
   return (
     <div className="min-h-screen bg-gray-100">
